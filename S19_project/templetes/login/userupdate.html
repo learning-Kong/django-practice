@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>userupdate</title>
+</head>
+<body>
+        <h3>修改用户</h3>
+    <form action="/account/userupdate-{{obj.pk}}" method="POST">
+        <input type="text" name="user" value="{{obj.username}}">
+        <input type="text" name="pwd" value="{{obj.password}}">
+        <input type="submit" value="提交">
+    </form>
+</body>
+</html>

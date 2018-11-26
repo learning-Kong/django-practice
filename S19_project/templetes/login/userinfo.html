@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>userinfo</title>
+</head>
+<body>
+    {{ user_info.pk }}
+    <h3>用户详细信息</h3>
+    <label>用户编号：{{ user_info.pk }}</label>
+    <label>用户姓名：{{ user_info.username }}</label>
+    <label>用户密码：{{ user_info.password }}</label>
+    <label>用户分组：{{ user_info.user_group.caption }}</label>
+</body>
+</html>

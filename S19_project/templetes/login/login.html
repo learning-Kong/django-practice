@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+    <h3>添加用户</h3>
+    <form action="/account/login/" method="POST">
+        <input type="text" name="user" placeholder="用户名">
+        <input type="text" name="pwd" placeholder="密码">
+        <input type="submit" value="提交">
+    </form>
+    <h3>用户操作</h3>
+    <ul>
+        {% for i in obj_info %}
+            <li>
+                <a> 用户名：{{ i.username }}</a> |
+                <a href="/account/userdel-{{i.pk}}" >删除</a> |
+                <a href="/account/userinfo-{{i.pk}}">详细</a> |
+                <a onclick="clickhandler()" href="/account/userupdate-{{i.pk}}">修改</a>
+                <!--/<a href="/account/userupdate-{{i.pk}}">修改</a>-->
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+<script type="text/javascript">
+    function clickhandler(){
+        confirm('继续请点击确认');
+    }
+</script>
+</html>
