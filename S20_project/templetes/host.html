@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <title>host</title>
+    <style>
+        .hide{
+            display: none;
+        }
+        .shade{
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: black;
+            opacity: 0.6;
+            z-index: 100;
+        }
+        .add-modal,.edit-modal{
+            position: fixed;
+            height: 300px;
+            width: 400px;
+            top:100px;
+            left: 50%;
+            z-index: 101;
+            border: 1px solid red;
+            background: white;
+            margin-left: -200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>主机列表（对象）</h1>
+    <div>
+        <input id="add_host" type="button" value="添加" />
+    </div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>主机名</th>
+                <th>IP</th>
+                <th>端口</th>
+                <th>业务线名称</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in v1 %}
+                <tr hid='{{ row.id }}' bid="{{ row.b_id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ row.hostname }}</td>
+                    <td>{{ row.ip}}</td>
+                    <td>{{ row.b.caption}}</td>
+                    <td>{{row.b.code}}</td>
+                    <td>
+                        <a class="edit">编辑</a>|<a class="delete">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <div class="shade hide"></div>
+    <div class="add-modal hide">
+        <form id="add_from" method="POST" action="/host/">
+            <div class="group">
+                <input id="host" type="text" placeholder="主机名" name="hostname" />
+            </div>
+
+            <div class="group">
+                <input id="ip" type="text" placeholder="IP" name="ip" />
+            </div>
+
+            <div class="group">
+                <input id="port" type="text" placeholder="端口" name="port" />
+            </div>
+            <div class="group">
+                <select name="b_id">
+                    {% for op in v1 %}
+                        <option value="{{ op.b_id }}">---{{ op.b.caption }}---</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="提交">
+            <a id='ajax_submit'> ajax </a>
+            <input id='cancel' type="button" value="取消">
+        </form>
+    </div>
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script>
+        $(function(){
+
+            $('#add_host').click(function(){
+                $('.shade,.add-modal').removeClass('hide');
+            });
+
+            $('#cancel').click(function(){
+                $('.shade,.add-modal').addClass('hide');
+            });
+
+            $('#ajax_submit').check(function(){
+                $.ajax({
+                    url: "/test_ajax/",
+                    type:"POST",
+                    data:$('#add_from').serialize(),
+                    success:function(data){
+                        var obj = JSON.parse(data);
+                    }
+                })
+            });
+        })
+    </script>
+</body>
+</html>
