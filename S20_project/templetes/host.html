@@ -90,6 +90,31 @@
             <span id="erro_msg" style="color: red"></span>
         </form>
     </div>
+    <div class="edit-modal hide">
+            <div class="group">
+                <input type="text" placeholder="主机名" name="hostname" />
+            </div>
+
+            <div class="group">
+                <input type="text" placeholder="IP" name="ip" />
+            </div>
+
+            <div class="group">
+                <input type="text" placeholder="端口" name="port" />
+            </div>
+            <div class="group">
+                <select name="b_id">
+                    {% for op in v2 %}
+                        <option value="{{ op.id }}">---{{ op.caption }}---</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="提交">
+            <a id='ajax_edit'> ajax </a>
+            <input id='edit_cancel' type="button" value="取消">
+            <span id="edit_error_msg" style="color: red"></span>
+
+    </div>
     <script src="/static/jquery-1.12.4.js"></script>
     <script>
         $(function(){
@@ -116,6 +141,13 @@
                         }
                     }
                 })
+            });
+            $('.edit').click(function(){
+                $('.shade,.edit-modal').removeClass('hide');
+            });
+
+            $('#edit_cancel').click(function(){
+                $('.shade,.edit-modal').addClass('hide');
             });
         })
     </script>
