@@ -52,8 +52,8 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ row.hostname }}</td>
                     <td>{{ row.ip}}</td>
-                    <td>{{ row.b.caption}}</td>
-                    <td>{{row.b.code}}</td>
+                    <td>{{ row.port}}</td>
+                    <td>{{row.b.caption}}</td>
                     <td>
                         <a class="edit">编辑</a>|<a class="delete">删除</a>
                     </td>
@@ -79,14 +79,15 @@
             </div>
             <div class="group">
                 <select name="b_id">
-                    {% for op in v1 %}
-                        <option value="{{ op.b_id }}">---{{ op.b.caption }}---</option>
+                    {% for op in v2 %}
+                        <option value="{{ op.id }}">---{{ op.caption }}---</option>
                     {% endfor %}
                 </select>
             </div>
             <input type="submit" value="提交">
             <a id='ajax_submit'> ajax </a>
             <input id='cancel' type="button" value="取消">
+            <span id="erro_msg" style="color: red"></span>
         </form>
     </div>
     <script src="/static/jquery-1.12.4.js"></script>
@@ -101,13 +102,18 @@
                 $('.shade,.add-modal').addClass('hide');
             });
 
-            $('#ajax_submit').check(function(){
+            $('#ajax_submit').click(function(){
                 $.ajax({
                     url: "/test_ajax/",
                     type:"POST",
                     data:$('#add_from').serialize(),
                     success:function(data){
                         var obj = JSON.parse(data);
+                        if(obj.status){
+                            location.reload();
+                        }else{
+                            $('#erro_msg').text(obj.error);
+                        }
                     }
                 })
             });
