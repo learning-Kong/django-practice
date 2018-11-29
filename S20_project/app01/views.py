@@ -2,18 +2,25 @@ from django.shortcuts import render, HttpResponse, redirect
 from . import models
 import json
 import re
+import time
 
 # Create your views here.
 
 def info(request):
-    return HttpResponse('hello world')
+    if request.method == "POST":
+        nid = request.POST.get('nid')
+        v1 = models.Host.objects.get(nid=nid)
+        ret = {'status': True, 'hostname': None, 'ip': None, 'port': None}
+        print(11111)
+        ret['hostname'] = v1.hostname
+        ret['ip'] = v1.ip
+        ret['port'] = v1.port
+        return HttpResponse(json.dumps(ret))
+
 def host(request):
     if request.method == "GET":
         v1 = models.Host.objects.filter(nid__gt=0)
         v2 = models.Business.objects.filter(id__gt=0)
-        print(v1)
-        for i in v2:
-            print(i.caption)
         return render(request, "host.html", {'v1': v1, 'v2': v2})
     if request.method == "POST":
         name = request.POST.get('hostname')
@@ -27,7 +34,6 @@ def host(request):
 def test_ajax(request):
     if request.method == "GET":
         v1 = models.Host.objects.filter(nid__gt=0)
-        print(v1)
         return render(request, "host.html", {'v1': v1})
     if request.method == "POST":
         ret = {'status': True, 'error': None, 'data': None}
@@ -68,5 +74,11 @@ def edit_ajax(request):
             print(e)
             ret['status'] = False
             ret['error'] = '请求错误'
-        print(nid, name, ip, port, b_id)
+        return HttpResponse(json.dumps(ret))
+def delete(request):
+    if request.method == "POST":
+        ret = {'status': True, 'error': None, 'data': None}
+        nid = request.POST.get('nid')
+        print(nid)
+        models.Host.objects.filter(nid=nid).delete()
         return HttpResponse(json.dumps(ret))
