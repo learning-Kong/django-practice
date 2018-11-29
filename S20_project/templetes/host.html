@@ -147,22 +147,22 @@
 
                 $('#edit_form').find('select').val(bid);
                 $('#edit_form').find('input[name="nid"]').val(nid);
+            });
 
-                $('#ajax_submit_edit').click(function(){
-                    $.ajax({
-                        url: "/test_ajax/",
-                        type:"POST",
-                        data: $('#edit_form').serialize(),
-                        success:function(data){
-                            var obj = JSON.parse(data);
-                            if(obj.status){
-                                location.reload();
-                            }else{
-                                $('#edit_error_msg').text(obj.error);
-                            }
+            $('#ajax_submit_edit').click(function(){
+                $.ajax({
+                    url: "/edit_ajax/",
+                    type:"POST",
+                    data: $('#edit_form').serialize(),
+                    success:function(data){
+                        var obj = JSON.parse(data);
+                        if(obj.status){
+                            location.reload();
+                        }else{
+                            $('#edit_error_msg').text(obj.error);
                         }
-                    })
-                });
+                    }
+                })
             });
 
             $('#edit_cancel').click(function(){
