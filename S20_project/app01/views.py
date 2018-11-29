@@ -50,10 +50,23 @@ def test_ajax(request):
         return HttpResponse(json.dumps(ret))
 def edit_ajax(request):
     if request.method == "POST":
-        ret = {'status': False, 'error': None, 'data': None}
-        name = request.POST.get('hostname')
-        ip = request.POST.get('ip')
-        port = request.POST.get('port')
-        b_id = request.POST.get('b_id')
-        print(name, ip, port, b_id)
+        try:
+            ret = {'status': True, 'error': None, 'data': None}
+            nid = request.POST.get('nid')
+            name = request.POST.get('hostname')
+            ip = request.POST.get('ip')
+            port = request.POST.get('port')
+            b_id = request.POST.get('b_id')
+            chck_IP = re.match('^((25[0-5]|2[0-4]\d|[0-1]?\d?\d)\.){3}((25[0-5]|2[0-4]\d|[0-1]?\d?\d))$', ip)
+            if chck_IP:
+                models.Host.objects.filter(nid=nid).update(hostname=name, ip=ip, port=port, b_id=b_id)
+            else:
+                print(name, ip, port, b_id)
+                ret['status'] = False
+                ret['error'] = 'ip格式错误'
+        except Exception as e:
+            print(e)
+            ret['status'] = False
+            ret['error'] = '请求错误'
+        print(nid, name, ip, port, b_id)
         return HttpResponse(json.dumps(ret))
