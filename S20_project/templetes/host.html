@@ -48,7 +48,7 @@
         </thead>
         <tbody>
             {% for row in v1 %}
-                <tr hid='{{ row.id }}' bid="{{ row.b_id }}">
+                <tr hid="{{ row.nid }}" bid="{{ row.b_id }}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ row.hostname }}</td>
                     <td>{{ row.ip}}</td>
@@ -69,11 +69,9 @@
             <div class="group">
                 <input id="host" type="text" placeholder="主机名" name="hostname" />
             </div>
-
             <div class="group">
                 <input id="ip" type="text" placeholder="IP" name="ip" />
             </div>
-
             <div class="group">
                 <input id="port" type="text" placeholder="端口" name="port" />
             </div>
@@ -91,29 +89,19 @@
         </form>
     </div>
     <div class="edit-modal hide">
-            <div class="group">
+        <form id="edit_form" method="POST" action="/host/">
+                <input type="text" name="nid" />
                 <input type="text" placeholder="主机名" name="hostname" />
-            </div>
-
-            <div class="group">
                 <input type="text" placeholder="IP" name="ip" />
-            </div>
-
-            <div class="group">
-                <input type="text" placeholder="端口" name="port" />
-            </div>
-            <div class="group">
+                <input  type="text" placeholder="端口" name="port" />
                 <select name="b_id">
                     {% for op in v2 %}
-                        <option value="{{ op.id }}">---{{ op.caption }}---</option>
+                    <option value="{{ op.id }}">{{ op.caption }}</option>
                     {% endfor %}
                 </select>
-            </div>
             <input type="submit" value="提交">
-            <a id='ajax_edit'> ajax </a>
-            <input id='edit_cancel' type="button" value="取消">
-            <span id="edit_error_msg" style="color: red"></span>
-
+            <a id="ajax_submit_edit" >确认编辑</a>
+        </form>
     </div>
     <script src="/static/jquery-1.12.4.js"></script>
     <script>
@@ -144,10 +132,27 @@
             });
             $('.edit').click(function(){
                 $('.shade,.edit-modal').removeClass('hide');
-            });
 
-            $('#edit_cancel').click(function(){
-                $('.shade,.edit-modal').addClass('hide');
+                var bid = $(this).parent().parent().attr('bid');
+                var nid = $(this).parent().parent().attr('hid');
+
+                $('#edit_form').find('select').val(bid);
+                $('#edit_form').find('input[name="nid"]').val(nid);
+                $('#ajax_submit_edit').click(function(){
+                    $.ajax({
+                        url: "/test_ajax/",
+                        type:"POST",
+                        data: $('#edit_form').serialize(),
+                        success:function(data){
+                            var obj = JSON.parse(data);
+                            if(obj.status){
+                                location.reload();
+                            }else{
+                                $('#erro_msg').text(obj.error);
+                            }
+                        }
+                    })
+                });
             });
         })
     </script>

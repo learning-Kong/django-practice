@@ -48,3 +48,12 @@ def test_ajax(request):
             ret['status'] = False
             ret['error'] = '请求错误'
         return HttpResponse(json.dumps(ret))
+def edit_ajax(request):
+    if request.method == "POST":
+        ret = {'status': False, 'error': None, 'data': None}
+        name = request.POST.get('hostname')
+        ip = request.POST.get('ip')
+        port = request.POST.get('port')
+        b_id = request.POST.get('b_id')
+        print(name, ip, port, b_id)
+        return HttpResponse(json.dumps(ret))
