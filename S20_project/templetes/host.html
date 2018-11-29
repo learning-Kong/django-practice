@@ -147,7 +147,19 @@
 
                 $('#edit_form').find('select').val(bid);
                 $('#edit_form').find('input[name="nid"]').val(nid);
-            });
+
+                $.ajax({
+                    url: "/info/",
+                    type:"POST",
+                    data: {'nid': nid},
+                    success:function(data){
+                        var obj = JSON.parse(data);
+                        $('#edit_form').find('input[name="hostname"]').val(obj.hostname);
+                        $('#edit_form').find('input[name="ip"]').val(obj.ip);
+                        $('#edit_form').find('input[name="port"]').val(obj.port);
+                    }
+                })
+             });
 
             $('#ajax_submit_edit').click(function(){
                 $.ajax({
