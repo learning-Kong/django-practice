@@ -17,7 +17,7 @@
             opacity: 0.6;
             z-index: 100;
         }
-        .add-modal,.edit-modal{
+        .add-modal,.edit-modal,.delete-modal{
             position: fixed;
             height: 300px;
             width: 400px;
@@ -112,6 +112,15 @@
             <span id="edit_error_msg" style="color: red"></span>
         </form>
     </div>
+    <dvi class="delete-modal hide">
+        <div class="group">
+            <span>确认需要删除该主机信息！！！！</span>
+        </div>
+        <div>
+            <input type="button" id="delete_button" value="确认"/>
+            <input type="button" id="delete_button_1" value="取消">
+        </div>
+    </dvi>
     <script src="/static/jquery-1.12.4.js"></script>
     <script>
         $(function(){
@@ -179,6 +188,23 @@
 
             $('#edit_cancel').click(function(){
                 $('.shade,.edit-modal').addClass('hide');
+            });
+
+            $('.delete').click(function confirmDialog(){
+                if(confirm('你要确定还是取消')){
+                    var nid = $(this).parent().parent().attr('hid');
+                    $.ajax({
+                        url: "/delete/",
+                        type:"POST",
+                        data: {'nid': nid},
+                        success:function(data){
+                            var obj = JSON.parse(data);
+                        if(obj.status){
+                            location.reload();
+                        }
+                        }
+                    })
+                }
             })
         })
     </script>
